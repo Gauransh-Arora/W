@@ -80,3 +80,28 @@ TreeNode* bstFromPreorder(vector<int>& pre) {
     int i = 0;
     return buildFromPre(pre, i, INT_MIN, INT_MAX);
 }
+
+
+TreeNode* build(vector<int>& nums, int left, int right) {
+    if (left > right) return nullptr;
+
+    int mid = left + (right - left) / 2;
+
+    TreeNode* root = new TreeNode(nums[mid]);
+    root->left = build(nums, left, mid - 1);
+    root->right = build(nums, mid + 1, right);
+
+    return root;
+}
+
+TreeNode* sortedArrayToBST(vector<int>& nums) {
+    return build(nums, 0, nums.size() - 1);
+}
+TreeNode* sortedListToBST(ListNode* head) {
+    vector<int> nums;
+    while (head) {
+        nums.push_back(head->val);
+        head = head->next;
+    }
+    return build(nums, 0, nums.size() - 1);
+}
