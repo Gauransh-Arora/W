@@ -10,52 +10,37 @@ struct TreeNode {
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}  
 };
 
+void rightDFS(TreeNode* node, int level, vector<int>& ans) {
+    if (!node) return;
+
+    // First time reaching this level → add to result
+    if (level == ans.size())
+        ans.push_back(node->val);
+
+    rightDFS(node->right, level + 1, ans);
+    rightDFS(node->left, level + 1, ans);
+}
+
 vector<int> rightSideView(TreeNode* root) {
     vector<int> ans;
-    if (!root) return ans;
-
-    queue<TreeNode*> q;
-    q.push(root);
-
-    while (!q.empty()) {
-        int size = q.size();
-        TreeNode* node = NULL;
-
-        while (size--) {
-            node = q.front(); 
-            q.pop();
-
-            if (node->left) q.push(node->left);
-            if (node->right) q.push(node->right);
-        }
-
-        ans.push_back(node->val); // last node of this level
-    }
-
+    rightDFS(root, 0, ans);
     return ans;
+}
+
+void leftDFS(TreeNode* node, int level, vector<int>& ans) {
+    if (!node) return;
+
+    // First node seen at this level
+    if (level == ans.size())
+        ans.push_back(node->val);
+
+    leftDFS(node->left, level + 1, ans);
+    leftDFS(node->right, level + 1, ans);
 }
 
 vector<int> leftSideView(TreeNode* root) {
     vector<int> ans;
-    if (!root) return ans;
-
-    queue<TreeNode*> q;
-    q.push(root);
-
-    while (!q.empty()) {
-        int size = q.size();
-
-        for (int i = 0; i < size; i++) {
-            TreeNode* node = q.front();
-            q.pop();
-
-            if (i == 0) 
-                ans.push_back(node->val); // first node of level
-
-            if (node->left) q.push(node->left);
-            if (node->right) q.push(node->right);
-        }
-    }
+    leftDFS(root, 0, ans);
     return ans;
 }
 
